@@ -35,7 +35,7 @@ Sei ermutigend und lobe Teilerfolge.
 
 # 4. KI-Modell initialisieren
 model = genai.GenerativeModel(
-    model_name="models/gemini-2.5-pro",
+    model_name="models/gemini-3.1-pro-preview",
     system_instruction=system_prompt
 )
 
