@@ -54,7 +54,7 @@ if user_input:
         try:
             # Wir nutzen das extrem starke Llama 3 Modell
             stream = client.chat.completions.create(
-                model="llama-3.1-8b-instant",
+                model="llama3-8b-8192",
                 messages=st.session_state.messages,
                 stream=True
             )
