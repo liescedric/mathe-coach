@@ -24,22 +24,18 @@ custom_css = css_start + """
     background-image: 
         linear-gradient(#e0e0e0 1px, transparent 1px),
         linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
-    background-size: 30px 30px; /* Exakt 30px Kästchen */
+    background-size: 30px 30px; 
     background-position: 0 0;
-    
-    /* Das Padding oben (30px) sorgt dafür, dass die erste Zeile auf der ersten Linie landet */
     padding: 30px 20px 30px 20px; 
     border: 1px solid #ccc;
     border-radius: 5px;
-    
     font-family: 'Caveat', cursive;
     font-size: 24px;
     color: #000080;
     min-height: 500px;
     box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-    
     white-space: pre-wrap;
-    line-height: 30px; /* Muss exakt der background-size entsprechen! */
+    line-height: 30px; 
 }
 """ + css_end
 st.markdown(custom_css, unsafe_allow_html=True)
@@ -57,10 +53,10 @@ with st.sidebar:
     *Frage: Wie viel kostet eine Brezel und wie viel ein Muffin?*
     
     **Aufgabe 3: Konzertkarten**
-    Für ein Schulkonzert wurden 150 Karten verkauft. Erwachsene 8 Euro, Schüler 5 Euro. Einnahmen 990 Euro.
+    Für ein Schulkonzert wurden 150 Karten verkauft. Erwachsene kosten 8 Euro, Schüler 5 Euro. Einnahmen 990 Euro.
     *Frage: Wie viele Erwachsene und wie viele Schüler waren auf dem Konzert?*
     """)
-    st.success("Tipp: Der Notizzettel rechts scrollt jetzt immer mit und bleibt im Blick!")
+    st.success("Tipp: Der Notizzettel rechts scrollt immer mit und bleibt im Blick!")
 
 st.title("🧮 Dein interaktiver Mathe-Coach")
 
@@ -74,26 +70,29 @@ else:
     st.error("Bitte hinterlege den API-Key (GROQ_API_KEY) in den Streamlit Secrets.")
     st.stop()
 
-# 5. Der System-Prompt (Fokus: Natürliche Dialogführung)
+# 5. Der extrem verschärfte System-Prompt
 system_prompt = """
-Du bist ein menschlicher, geduldiger Mathe-Tutor (8. Klasse). Du führst einen ganz natürlichen Dialog. 
+Du bist ein Mathe-Coach (8. Klasse). DEIN ZIEL IST ES, DASS DER SCHÜLER SELBST RECHNET. DU LÖST NIEMALS AUFGABEN!
 
-Geheimwissen für dich:
-1. Hühner & Schweine: x+y=20, 2x+4y=54
-2. Cafeteria: 3b+2m=6,80; 2b+4m=8,80
-3. Konzertkarten: e+s=150, 8e+5s=990
+DEIN GEHEIMWISSEN (Niemals verraten, bevor der Schüler es nicht selbst gesagt hat!):
+- Aufgabe 1: x+y=20, 2x+4y=54
+- Aufgabe 2: Brezeln (b) und Muffins (m). 3b+2m=6,80; 2b+4m=8,80
+- Aufgabe 3: Erwachsene (e) und Schüler (s). e+s=150, 8e+5s=990
 
-STRIKTE VERHALTENSREGELN FÜR DEN TUTOR:
-1. KEIN ROBOTER-SPRECH: Verwende NIEMALS Wörter wie "Phase 1", "Phase 2" oder "Lass uns modellieren". Sprich wie ein normaler Nachhilfelehrer.
-2. EXTREM KURZE ANTWORTEN: Stelle immer nur EINE einzige Frage auf einmal. Überfordere den Schüler nicht mit Aufzählungen von drei verschiedenen Lösungsverfahren.
-3. MITDENKEN & ADAPTIEREN: Wenn der Schüler sagt "Ich weiß nicht", "Erkläre du es mir" oder verwirrt ist, dann gib ihm einen konkreten, kleinen ersten Schritt vor. Frag nicht einfach stur noch einmal dasselbe.
-4. PASSIVITÄT: Wenn der Schüler von sich aus richtig rechnet, bestätige das nur kurz ("Korrekt!") und warte ab.
+STRIKTE VERHALTENSREGELN (Zwingend einhalten!):
+1. RECHENVERBOT: Wenn der Schüler "lösen bitte", "rechne das" oder ähnliches fordert, WEIGERE DICH FREUNDLICH. Sage: "Ich bin dein Coach, ich rechne nicht für dich. Was wäre dein erster eigener Schritt?"
+2. KEINE HALLUZINATIONEN: Bleibe exakt bei den Aufgaben (b ist Brezel, niemals Banane! e sind Erwachsene, keine eiskalten Tickets!).
+3. EINE FRAGE: Stelle in deiner Antwort immer nur EINE einzige Gegenfrage.
+4. PASSIVITÄT: Wenn der Schüler richtig rechnet, sage nur "Stimmt!" und warte auf seinen nächsten Schritt.
 
-STRIKTE FORMATIERUNGS-REGELN:
-1. Nutze im Chat für Mathematik IMMER das Dollar-Zeichen-Format (z.B. \(x+y=20\)).
-2. VERBOTEN: Normale Klammern als Mathe-Ersatz wie (x+y=20) sind verboten.
-3. ZWINGEND: Am Ende JEDER deiner Antworten schreibst du das Wort "NOTIZZETTEL:" gefolgt von den aktuell gültigen Formeln, die ihr schon gemeinsam herausgefunden habt. (Nur Formeln, kein Erklärtext).
-4. Für den Notizzettel nutze reinen Text ohne Dollarzeichen, damit die Handschrift gut lesbar bleibt (z.B. x + y = 20).
+FORMATIERUNG:
+1. Nutze im Chat für Mathematik IMMER ein Dollar-Zeichen (z.B. \(x+y=20\)).
+2. VERBOTEN: Eckige Klammern [...] oder Konstrukte wie \\qquad sind absolut verboten!
+
+REGELN FÜR DEN NOTIZZETTEL:
+1. Schreibe am Ende JEDER deiner Antworten: "NOTIZZETTEL:" gefolgt vom aktuellen Wissen.
+2. Der Notizzettel ist zu Beginn komplett LEER. Schreibe dein Geheimwissen NICHT dorthin!
+3. Füge Variablen und Gleichungen ERST DANN in den Notizzettel ein, WENN der Schüler sie im Chat richtig aufgestellt hat.
 """
 
 # 6. Chat-Verlauf und Notizzettel initialisieren
@@ -108,7 +107,7 @@ if "notizzettel" not in st.session_state:
 # 7. Layout in Spalten aufteilen
 chat_col, note_col = st.columns([2, 1])
 
-# Rechter Bereich: Notizzettel (Jetzt mit Sticky-Wrapper)
+# Rechter Bereich: Notizzettel
 with note_col:
     wrap_start = "<" + "div class='sticky-wrapper'" + ">"
     box_start = "<" + "div class='notizzettel-box'" + ">"
