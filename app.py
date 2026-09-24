@@ -4,37 +4,42 @@ from openai import OpenAI
 # 1. Seiten-Design
 st.set_page_config(page_title="Mathe-Coach", page_icon="🧮", layout="wide")
 
-# 2. Visuelles Design (Kariertes Papier, Handschrift & Sticky Notizzettel)
+# 2. Visuelles Design (Perfekt ausgerichtetes Karopapier & Sticky Wrapper)
 css_start = "<" + "style" + ">"
 css_end = "<" + "/style" + ">"
 custom_css = css_start + """
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap');
 
-/* Mache die rechte Spalte (Notizzettel) klebrig beim Scrollen */
-[data-testid="column"]:nth-of-type(2) {
+/* Der Wrapper, der den Zettel beim Scrollen festhält */
+.sticky-wrapper {
     position: -webkit-sticky;
     position: sticky;
-    top: 4rem;
-    align-self: flex-start;
-    z-index: 10;
+    top: 2rem;
+    z-index: 100;
 }
 
+/* Der Notizzettel mit exakt synchronisierten Linien */
 .notizzettel-box {
     background-color: #ffffff;
     background-image: 
-        linear-gradient(#d9d9d9 1px, transparent 1px),
-        linear-gradient(90deg, #d9d9d9 1px, transparent 1px);
-    background-size: 20px 20px;
-    padding: 20px 20px 40px 20px;
+        linear-gradient(#e0e0e0 1px, transparent 1px),
+        linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
+    background-size: 30px 30px; /* Exakt 30px Kästchen */
+    background-position: 0 0;
+    
+    /* Das Padding oben (30px) sorgt dafür, dass die erste Zeile auf der ersten Linie landet */
+    padding: 30px 20px 30px 20px; 
     border: 1px solid #ccc;
     border-radius: 5px;
+    
     font-family: 'Caveat', cursive;
-    font-size: 26px;
+    font-size: 24px;
     color: #000080;
-    min-height: 400px;
+    min-height: 500px;
     box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    
     white-space: pre-wrap;
-    line-height: 1.5;
+    line-height: 30px; /* Muss exakt der background-size entsprechen! */
 }
 """ + css_end
 st.markdown(custom_css, unsafe_allow_html=True)
@@ -55,7 +60,7 @@ with st.sidebar:
     Für ein Schulkonzert wurden 150 Karten verkauft. Erwachsene 8 Euro, Schüler 5 Euro. Einnahmen 990 Euro.
     *Frage: Wie viele Erwachsene und wie viele Schüler waren auf dem Konzert?*
     """)
-    st.success("Tipp: Der Chat ist links. Dein Notizzettel rechts scrollt jetzt immer mit!")
+    st.success("Tipp: Der Notizzettel rechts scrollt jetzt immer mit und bleibt im Blick!")
 
 st.title("🧮 Dein interaktiver Mathe-Coach")
 
@@ -69,31 +74,26 @@ else:
     st.error("Bitte hinterlege den API-Key (GROQ_API_KEY) in den Streamlit Secrets.")
     st.stop()
 
-# 5. Der System-Prompt (Fokus: Sokratischer Dialog & Empathie)
+# 5. Der System-Prompt (Fokus: Natürliche Dialogführung)
 system_prompt = """
-Du bist ein empathischer, sokratischer Mathe-Tutor (8. Klasse). Du löst keine Aufgaben, sondern befähigst den Schüler, selbst zu denken.
+Du bist ein menschlicher, geduldiger Mathe-Tutor (8. Klasse). Du führst einen ganz natürlichen Dialog. 
 
 Geheimwissen für dich:
-1. Hühner & Schweine: Hühner = 2 Beine, Schweine = 4 Beine. (x+y=20, 2x+4y=54)
-2. Cafeteria: 3 Brezeln + 2 Muffins = 6,80 Euro; 2 Brezeln + 4 Muffins = 8,80 Euro
+1. Hühner & Schweine: x+y=20, 2x+4y=54
+2. Cafeteria: 3b+2m=6,80; 2b+4m=8,80
 3. Konzertkarten: e+s=150, 8e+5s=990
 
-STRIKTE DIDAKTIK-REGELN (WICHTIG!):
-1. EMPATHIE & GRUNDLAGEN ZUERST: Wenn der Schüler Verständnisfragen stellt (z.B. "Was ist ein x?", "Was ist eine Gleichung?", "Ich verstehe das nicht"), STOPPE das Rechnen sofort. Erkläre das Konzept sehr einfach und alltagsnah, bevor ihr mit der Aufgabe weitermacht.
-2. SOKRATISCHER DIALOG: Zwinge dem Schüler niemals deinen Lösungsweg auf. Wenn die Gleichungen stehen, frage: "Kennst du ein Verfahren, um solche Gleichungen zu lösen?". Lass ihn wählen (Einsetzungs-, Gleichsetzungs- oder Additionsverfahren). 
-3. STRUKTURIERTE PHASEN: Behandle jede Aufgabe in dieser Reihenfolge:
-   - Phase 1: Unbekannte definieren (Was suchen wir?)
-   - Phase 2: Gleichungen aufstellen (Modellieren)
-   - Phase 3: Lösungsverfahren wählen
-   - Phase 4: Schrittweise rechnen
-   Springe niemals direkt zu Phase 3, wenn Phase 2 nicht abgeschlossen ist.
-4. ZURÜCKHALTUNG: Wenn der Schüler einen richtigen Schritt macht, bestätige es kurz ("Stimmt!") und WARTE. Frag nicht ständig "Was machen wir jetzt?", lass ihm Zeit nachzudenken. Gib nur Hilfestellung, wenn er stecken bleibt.
+STRIKTE VERHALTENSREGELN FÜR DEN TUTOR:
+1. KEIN ROBOTER-SPRECH: Verwende NIEMALS Wörter wie "Phase 1", "Phase 2" oder "Lass uns modellieren". Sprich wie ein normaler Nachhilfelehrer.
+2. EXTREM KURZE ANTWORTEN: Stelle immer nur EINE einzige Frage auf einmal. Überfordere den Schüler nicht mit Aufzählungen von drei verschiedenen Lösungsverfahren.
+3. MITDENKEN & ADAPTIEREN: Wenn der Schüler sagt "Ich weiß nicht", "Erkläre du es mir" oder verwirrt ist, dann gib ihm einen konkreten, kleinen ersten Schritt vor. Frag nicht einfach stur noch einmal dasselbe.
+4. PASSIVITÄT: Wenn der Schüler von sich aus richtig rechnet, bestätige das nur kurz ("Korrekt!") und warte ab.
 
 STRIKTE FORMATIERUNGS-REGELN:
-1. Nutze im Chat für Mathematik AUSNAHMSLOS das Dollar-Zeichen-Format. Schreibe IMMER \(x+y=20\). 
-2. VERBOTEN: Normale Klammern als Mathe-Ersatz wie (x+y=20) oder \(((x))\) sind strengstens verboten!
-3. Am Ende JEDER deiner Antworten schreibst du zwingend das Wort "NOTIZZETTEL:" gefolgt von den aktuell gültigen Gleichungen oder Variablen. Schreibe hier NUR Dinge auf, die ihr bereits klar vereinbart habt.
-4. Für den Notizzettel nutze reinen Text (ohne Markdown/Dollarzeichen), z.B. 2x + 4y = 54.
+1. Nutze im Chat für Mathematik IMMER das Dollar-Zeichen-Format (z.B. \(x+y=20\)).
+2. VERBOTEN: Normale Klammern als Mathe-Ersatz wie (x+y=20) sind verboten.
+3. ZWINGEND: Am Ende JEDER deiner Antworten schreibst du das Wort "NOTIZZETTEL:" gefolgt von den aktuell gültigen Formeln, die ihr schon gemeinsam herausgefunden habt. (Nur Formeln, kein Erklärtext).
+4. Für den Notizzettel nutze reinen Text ohne Dollarzeichen, damit die Handschrift gut lesbar bleibt (z.B. x + y = 20).
 """
 
 # 6. Chat-Verlauf und Notizzettel initialisieren
@@ -108,13 +108,15 @@ if "notizzettel" not in st.session_state:
 # 7. Layout in Spalten aufteilen
 chat_col, note_col = st.columns([2, 1])
 
-# Rechter Bereich: Notizzettel
+# Rechter Bereich: Notizzettel (Jetzt mit Sticky-Wrapper)
 with note_col:
-    # Den Expander weglassen, damit das Sticky-Verhalten besser funktioniert
-    html_start = "<" + "div class='notizzettel-box'" + ">"
-    html_end = "<" + "/div" + ">"
+    wrap_start = "<" + "div class='sticky-wrapper'" + ">"
+    box_start = "<" + "div class='notizzettel-box'" + ">"
+    box_end = "<" + "/div" + ">"
+    wrap_end = "<" + "/div" + ">"
+    
     st.markdown("### 📄 Dein Notizzettel")
-    st.markdown(html_start + st.session_state.notizzettel + html_end, unsafe_allow_html=True)
+    st.markdown(wrap_start + box_start + st.session_state.notizzettel + box_end + wrap_end, unsafe_allow_html=True)
 
 # Linker Bereich: Chat
 with chat_col:
