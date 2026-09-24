@@ -99,6 +99,7 @@ REGELN FÜR DEN NOTIZZETTEL:
 5. Keine LaTeX-Zeichen im Notizzettel (keine $, keine Klammern).
 6. Schreib ausschließlich!!! nur die Informationen auf den Notizzettel, die der Schüler selbst geschrieben hat.
 7. Der Notizzettel ist strukturiert in einen Sammelteil, einen Rechenteil und einen Antwortsatz. Der Sammelteil sammelt alle Informationen, die der Schüler erarbeitet. Der Rechenteil ist mit einem Absatz getrennt und besteht pro Zeile aus der zu berechnenden gleichung und rechts nemebn einem strich die rechenoperation, die zur nächsten zeile führt. benutze wenig text mehr pfeile. ergebnisse werden unterstrichen. der Antwortsatz besteht nur aus "Antwortsatz: ..."
+8. Schreibe Aufgabe 1/2/3 als Überschrift auf den Notizzettel, sobald der Schüler sich für eine Aufgabe entschieden hat. Darunter befindet sich der Block der Aufgabe. Wenn der Schüler zeitwese an einer anderen Aufgabe arbeiten will, starte ein neuen Block darunter/darüber. Es kann maximal 3 Blöcke geben: Aufgabe 1, Aufgabe 2, Aufgabe 3
 
 FORMAT DEINER ANTWORT:
 Deine Ausgabe MUSS zwingend aus diesen drei Teilen bestehen (nutze exakt diese Schlüsselwörter):
