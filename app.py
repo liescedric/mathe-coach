@@ -4,7 +4,34 @@ from openai import OpenAI
 # 1. Seiten-Design
 st.set_page_config(page_title="Mathe-Coach", page_icon="🧮", layout="wide")
 
-# 2. ÜBERSICHT IN DER SEITENLEISTE
+# 2. Visuelles Design für den Notizzettel (Kariertes Papier & Handschrift)
+# Wir stückeln die HTML-Tags, damit Chat-Schnittstellen nicht abbrechen
+css_start = "<" + "style" + ">"
+css_end = "<" + "/style" + ">"
+custom_css = css_start + """
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap');
+
+.notizzettel-box {
+    background-color: #ffffff;
+    background-image: 
+        linear-gradient(#d9d9d9 1px, transparent 1px),
+        linear-gradient(90deg, #d9d9d9 1px, transparent 1px);
+    background-size: 20px 20px;
+    padding: 20px 20px 40px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Caveat', cursive;
+    font-size: 26px;
+    color: #000080;
+    min-height: 400px;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+""" + css_end
+st.markdown(custom_css, unsafe_allow_html=True)
+
+# 3. ÜBERSICHT IN DER LINKEN SEITENLEISTE (Nur die Aufgaben)
 with st.sidebar:
     st.title("📝 Deine Aufgaben")
     st.markdown("""
@@ -13,22 +40,18 @@ with st.sidebar:
     *Frage: Wie viele Hühner und wie viele Schweine sind es?*
     
     **Aufgabe 2: Cafeteria**
-    Anna kauft 3 Brezeln und 2 Muffins für 6,80€. Ben kauft 2 Brezeln und 4 Muffins für 8,80€. 
+    Anna kauft 3 Brezeln und 2 Muffins für 6,80 Euro. Ben kauft 2 Brezeln und 4 Muffins für 8,80 Euro. 
     *Frage: Wie viel kostet eine Brezel und wie viel ein Muffin?*
     
     **Aufgabe 3: Konzertkarten**
-    Für ein Schulkonzert wurden 150 Karten verkauft. Erwachsene 8€, Schüler 5€. Einnahmen 990€.
+    Für ein Schulkonzert wurden 150 Karten verkauft. Erwachsene 8 Euro, Schüler 5 Euro. Einnahmen 990 Euro.
     *Frage: Wie viele Erwachsene und wie viele Schüler waren auf dem Konzert?*
     """)
-    st.divider()
-    st.title("📄 Dein Notizzettel")
-    st.info("Hier halten wir unsere aktuellen Gleichungen fest:")
-    # Platzhalter für den Notizzettel
-    notizzettel_platzhalter = st.empty()
+    st.success("Tipp: Der Chat ist links, dein Notizzettel rechts!")
 
 st.title("🧮 Dein interaktiver Mathe-Coach")
 
-# 3. API-Key laden
+# 4. API-Key laden
 if "GROQ_API_KEY" in st.secrets:
     client = OpenAI(
         api_key=st.secrets["GROQ_API_KEY"],
@@ -38,76 +61,87 @@ else:
     st.error("Bitte hinterlege den API-Key (GROQ_API_KEY) in den Streamlit Secrets.")
     st.stop()
 
-# 4. Der System-Prompt (mit Fokus auf Passivität und Flexibilität)
+# 5. Der System-Prompt (mit Fokus auf Passivität und Freiraum)
 system_prompt = """
-Du bist ein Mathe-Coach (8. Klasse). Du begleitest den Schüler bei der Lösung, aber DU GIBST NIEMALS DEN NÄCHSTEN RECHENSCHRITT VOR.
+Du bist ein authentischer, sehr zurückhaltender Mathe-Tutor (8. Klasse). Du begleitest den Schüler, aber du drängst ihn nicht und überlässt ihm die Führung.
 
 Geheimwissen für dich (Kontext):
 1. Hühner & Schweine: Hühner = 2 Beine, Schweine = 4 Beine. (x+y=20, 2x+4y=54)
 2. Cafeteria: 3 Brezeln + 2 Muffins = 6,80 Euro; 2 Brezeln + 4 Muffins = 8,80 Euro
 3. Konzertkarten: e+s=150, 8e+5s=990
 
-STRIKTE DIDAKTIK-REGELN:
-1. FREIE WAHL: Lass den Schüler entscheiden, welche Aufgabe er bearbeiten will.
-2. FLEXIBLE VARIABLEN: Akzeptiere JEDE Variablen-Zuweisung des Schülers (z.B. wenn er m=Brezel wählt, dann ist das so!). Korrigiere ihn nicht, passe dich an.
-3. ABSOLUTES WARTE-GEBOT: Wenn der Schüler eine Gleichung aufstellt oder umstellt, bestätige NUR, dass es richtig ist, und frage: "Was möchtest du als Nächstes tun?" oder "Wie geht es jetzt weiter?". RECHNE NIEMALS SELBST! Fasse keine Terme zusammen.
-4. "Ich weiß nicht": Wenn der Schüler nicht weiterweiß, gib EINEN kleinen Tipp (z.B. "Erinnerst du dich an das Einsetzungsverfahren?"). Löse die Aufgabe nicht auf.
+STRIKTE DIDAKTIK-REGELN (WICHTIG!):
+1. ABSOLUTE ZURÜCKHALTUNG: Sei passiv! Wenn der Schüler eine richtige Gleichung, Variable oder Rechnung nennt, lobe ihn kurz (z.B. "Stimmt genau!" oder "Richtig."). WARTE DANN EINFACH AB. Frage NICHT: "Was möchtest du als nächstes tun?" oder "Sollen wir jetzt x auflösen?". Lass den Schüler selbst überlegen, was der nächste Schritt ist.
+2. HILFE NUR BEI BEDARF: Greife nur helfend ein, wenn der Schüler einen Fehler macht, eine falsche Fährte verfolgt oder explizit "Ich weiß nicht" sagt. Gib dann nur einen winzigen Denkanstoß.
+3. FLEXIBLE VARIABLEN: Akzeptiere JEDE Variablen-Zuweisung des Schülers (z.B. m=Brezel).
+4. FREIE WAHL: Lass den Schüler entscheiden, welche Aufgabe er bearbeiten will.
 
 STRIKTE FORMATIERUNGS-REGELN:
-1. Nutze für Variablen und Formeln IMMER das korrekte Markdown-Math-Format. Schreibe ein Dollarzeichen vor und nach der Formel.
-2. VERBOTEN: Nutze NIEMALS normale Klammern um mathematische Ausdrücke, z.B. (x=20) oder ((x+y=20)). Das macht es unleserlich.
-3. Am Ende DEINER JEDEN Antwort schreibst du zwingend das Wort "NOTIZZETTEL:" gefolgt von den aktuell gültigen Gleichungen oder Variablen, die ihr bisher herausgefunden habt. (Beispiel: NOTIZZETTEL: m: Brezel, b: Muffin, 3m + 2b = 6.80).
+1. Nutze im Chat für Formeln IMMER das korrekte Markdown-Math-Format (mit Dollar-Zeichen).
+2. VERBOTEN: Nutze NIEMALS normale Klammern um mathematische Ausdrücke.
+3. Am Ende JEDER deiner Antworten schreibst du zwingend das Wort "NOTIZZETTEL:" gefolgt von den aktuell gültigen Gleichungen oder Variablen, die ihr bisher gemeinsam erarbeitet habt.
+4. WICHTIG FÜR DEN NOTIZZETTEL: Nutze nach dem Wort NOTIZZETTEL KEINE Markdown-Formatierungen, keine Dollar-Zeichen und kein LaTeX. Schreibe die Gleichungen dort als reinen Text (z.B. 3m + 2b = 6,80), damit die Handschrift-Schriftart sie gut darstellen kann.
 """
 
-# 5. Chat-Verlauf und Notizzettel initialisieren
+# 6. Chat-Verlauf und Notizzettel initialisieren
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": system_prompt}]
-    start_msg = "Hallo! 👋 Ich bin dein Mathe-Coach. Links in der Leiste siehst du unsere 3 Aufgaben. \n\nMit welcher Aufgabe möchtest du beginnen?"
+    start_msg = "Hallo! Ich bin dein Mathe-Coach. Mit welcher Aufgabe möchtest du beginnen?"
     st.session_state.messages.append({"role": "assistant", "content": start_msg})
 
 if "notizzettel" not in st.session_state:
     st.session_state.notizzettel = "Noch leer. Wir fangen gerade erst an!"
 
-# Notizzettel in der Sidebar aktualisieren
-notizzettel_platzhalter.markdown(st.session_state.notizzettel)
+# 7. Layout in Spalten aufteilen: Links (Chat) 2/3 Platz, Rechts (Notizzettel) 1/3 Platz
+chat_col, note_col = st.columns([2, 1])
 
-# 6. Bisherige Nachrichten anzeigen
-for msg in st.session_state.messages:
-    if msg["role"] != "system":
-        # Wir blenden den Notizzettel-Teil im Chat aus, da er in die Sidebar gehört
-        display_text = msg["content"].split("NOTIZZETTEL:")[0].strip()
-        with st.chat_message(msg["role"]):
-            st.markdown(display_text)
+# Rechter Bereich: Notizzettel im Expander (standardmäßig ausgeklappt)
+with note_col:
+    with st.expander("📄 Dein Notizzettel", expanded=True):
+        # Zusammenbauen des HTML-Tags ohne direkte "
+        div_end = "<" + "/div" + ">"
+        st.markdown(div_start + st.session_state.notizzettel + div_end, unsafe_allow_html=True)
 
-# 7. Chat-Eingabe
-user_input = st.chat_input("Schreibe deine Antwort oder Frage hier...")
+# Linker Bereich: Chat
+with chat_col:
+    for msg in st.session_state.messages:
+        if msg["role"] != "system":
+            # Wir blenden den Notizzettel-Code im sichtbaren Chat aus
+            display_text = msg["content"].split("NOTIZZETTEL:")[0].strip()
+            with st.chat_message(msg["role"]):
+                st.markdown(display_text)
+
+# 8. Chat-Eingabe (Fixiert am unteren Bildschirmrand)
+user_input = st.chat_input("Schreibe hier...")
 
 if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
-        st.markdown(user_input)
     
-    with st.chat_message("assistant"):
-        try:
-            stream = client.chat.completions.create(
-                model="openai/gpt-oss-20b", 
-                messages=st.session_state.messages,
-                stream=False # Stream=False erleichtert das Parsen des Notizzettels
-            )
-            full_response = stream.choices[0].message.content
-            
-            # Notizzettel extrahieren und im Session State speichern
-            if "NOTIZZETTEL:" in full_response:
-                chat_text, notizzettel_text = full_response.split("NOTIZZETTEL:")
-                st.session_state.notizzettel = notizzettel_text.strip()
-            else:
-                chat_text = full_response
-            
-            st.markdown(chat_text.strip())
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
-            
-            # Sidebar direkt aktualisieren (erfordert Rerun in Streamlit)
-            st.rerun()
-            
-        except Exception as e:
-            st.error(f"Es gab ein Problem: {e}")
+    with chat_col:
+        with st.chat_message("user"):
+            st.markdown(user_input)
+        
+        with st.chat_message("assistant"):
+            try:
+                stream = client.chat.completions.create(
+                    model="openai/gpt-oss-20b", 
+                    messages=st.session_state.messages,
+                    stream=False
+                )
+                full_response = stream.choices[0].message.content
+                
+                # Notizzettel extrahieren
+                if "NOTIZZETTEL:" in full_response:
+                    chat_text, notizzettel_text = full_response.split("NOTIZZETTEL:")
+                    st.session_state.notizzettel = notizzettel_text.strip()
+                else:
+                    chat_text = full_response
+                
+                st.markdown(chat_text.strip())
+                st.session_state.messages.append({"role": "assistant", "content": full_response})
+                
+                # Rerun erzwingt die Aktualisierung des Notizzettels auf der rechten Seite
+                st.rerun()
+                
+            except Exception as e:
+                st.error(f"Es gab ein Problem: {e}")
