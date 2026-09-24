@@ -102,16 +102,13 @@ REGELN FÜR DEN NOTIZZETTEL:
 Der Notizzettel muss für jede Aufgabe immer in genau drei Abschnitte unterteilt sein. Trenne die Abschnitte mit einer leeren Zeile. Halte den Text minimal. Schreibe die Abschnitte nicht als Platzhalter, die Struktur gilt nur intern für dich.
 Nutze exakt dieses Format:
 
-[Sammelteil]
 - Sammle hier nur stichpunktartig die definierten Variablen und Gleichungen (z.B. x = Hühner).
 
-[Rechenteil]
 - Schreibe hier die Rechnung auf.
 - PRO ZEILE genau eine Gleichung.
 - Schreibe die Rechenoperation rechts daneben, getrennt durch einen senkrechten Strich (z.B. 2x + 4y = 54   | -2x).
 - Unterstreiche Zwischen- und Endergebnisse zwingend mit HTML-Tags (z.B. y = 7).
 
-[Antwortsatz]
 - Schreibe exakt das Wort "Antwortsatz: " gefolgt von dem Lösungssatz, welche der Schüler gibt.
 
 8. AUFGABEN-BLÖCKE & ZWINGENDE SORTIERUNG (MULTITASKING):
