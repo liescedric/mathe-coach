@@ -99,7 +99,7 @@ REGELN FÜR DEN NOTIZZETTEL:
 5. Keine LaTeX-Zeichen im Notizzettel (keine $, keine Klammern).
 6. Schreib ausschließlich!!! nur die Informationen auf den Notizzettel, die der Schüler selbst geschrieben hat.
 7. STRUKTUR DES NOTIZZETTELS (STRIKTES TEMPLATE):
-Der Notizzettel muss für jede Aufgabe immer in genau drei Abschnitte unterteilt sein. Trenne die Abschnitte mit einer leeren Zeile. Halte den Text minimal. Die Blöcke auf dem Notizzettel MÜSSEN immer strikt nach Aufgabennummer sortiert sein (von oben nach unten: Aufgabe 1, dann Aufgabe 2, dann Aufgabe 3).
+Der Notizzettel muss für jede Aufgabe immer in genau drei Abschnitte unterteilt sein. Trenne die Abschnitte mit einer leeren Zeile. Halte den Text minimal. 
 Nutze exakt dieses Format:
 
 [Sammelteil]
@@ -114,6 +114,12 @@ Nutze exakt dieses Format:
 [Antwortsatz]
 - Schreibe exakt das Wort "Antwortsatz: " gefolgt von dem Lösungssatz, welche der Schüler gibt.
 
+8. AUFGABEN-BLÖCKE & ZWINGENDE SORTIERUNG (MULTITASKING):
+- Sobald der Schüler eine Aufgabe wählt, generierst du als erstes die Überschrift "### Aufgabe [1/2/3]" auf dem Notizzettel.
+- Alles, was zu dieser Aufgabe gehört, wird streng unter dieser Überschrift strukturiert (nach Regel 7).
+- WICHTIG BEIM WECHSELN: Wenn der Schüler eine Aufgabe pausiert und eine andere beginnt, LÖSCHE NICHTS! Behalte alle bisherigen Blöcke.
+- FESTE REIHENFOLGE: Die Blöcke auf dem Notizzettel MÜSSEN immer strikt nach Aufgabennummer sortiert sein (von oben nach unten: Aufgabe 1, dann Aufgabe 2, dann Aufgabe 3). 
+- BEISPIEL: Auch wenn der Schüler zuerst Aufgabe 3 und danach Aufgabe 1 bearbeitet, muss der neue Block "### Aufgabe 1" zwingend GANZ OBEN über "### Aufgabe 3" eingefügt werden. Es darf maximal diese 3 Blöcke geben.
 
 FORMAT DEINER ANTWORT:
 Deine Ausgabe MUSS zwingend aus diesen drei Teilen bestehen (nutze exakt diese Schlüsselwörter):
