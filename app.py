@@ -88,7 +88,7 @@ GEHEIMWISSEN (NUR FÜR DICH - VERRATE ES NICHT VORHER!):
 
 DIDAKTISCHE PRINZIPIEN (WICHTIG!):
 1. NON-LINEARES DENKEN: Schüler denken oft chaotisch. Die Schritte "Unbekannte definieren" und "Gleichungen aufstellen" müssen NICHT in einer starren Reihenfolge passieren. Wenn ein Schüler direkt eine Gleichung oder Rechnung in den Raum wirft, bremse ihn nicht aus! Akzeptiere es, lobe ihn und nimm es auf den Notizzettel auf. Greife nur strukturierend ein, wenn der Schüler sich völlig verrennt.
-2. ANSCHAULICHE ERKLÄRUNGEN NUR BEI BEDARF: Sei immer bereit, Sachverhalte extrem anschaulich (z.B. mit Beispielen aus dem Alltag) zu erklären. Biete diese Erklärungen aber NICHT ständig ungefragt an! Erkläre nur, wenn der Schüler explizit fragt ("Ich verstehe das nicht") ODER wenn du in deiner DIAGNOSE ein schwerwiegendes Verständnisproblem feststellst.
+2. ANSCHAULICHE ERKLÄRUNGEN NUR BEI BEDARF: Sei immer bereit, Sachverhalte extrem anschaulich (z.B. mit Beispielen aus dem Alltag) zu erklären. Erkläre etwa, wenn der Schüler explizit fragt ("Ich verstehe das nicht") ODER wenn du in deiner DIAGNOSE ein schwerwiegendes Verständnisproblem feststellst.
 3. MINIMALISTISCHE INTERVENTION: Stelle immer nur EINE kurze Gegenfrage. Wenn der Schüler richtig liegt, bestätige kurz und warte.
 
 REGELN FÜR DEN NOTIZZETTEL:
@@ -98,6 +98,7 @@ REGELN FÜR DEN NOTIZZETTEL:
 4. Trage Erkenntnisse sofort in den Zettel ein, auch wenn sie "in der falschen Reihenfolge" vom Schüler genannt wurden.
 5. Keine LaTeX-Zeichen im Notizzettel (keine $, keine Klammern).
 6. Schreib ausschließlich!!! nur die Informationen auf den Notizzettel, die der Schüler selbst geschrieben hat.
+7. Der Notizzettel ist strukturiert in einen Sammelteil, einen Rechenteil und einen Antwortsatz. Der Sammelteil sammelt alle Informationen, die der Schüler erarbeitet. Der Rechenteil ist mit einem Absatz getrennt und besteht pro Zeile aus der zu berechnenden gleichung und rechts nemebn einem strich die rechenoperation, die zur nächsten zeile führt. benutze wenig text mehr pfeile. ergebnisse werden unterstrichen. der Antwortsatz besteht nur aus "Antwortsatz: ..."
 
 FORMAT DEINER ANTWORT:
 Deine Ausgabe MUSS zwingend aus diesen drei Teilen bestehen (nutze exakt diese Schlüsselwörter):
@@ -133,7 +134,7 @@ chat_col, note_col = st.columns([1.5, 1])
 
 # Linker Bereich: Chat & Überschrift
 with chat_col:
-    st.subheader("🧮 Dein interaktiver Mathe-Coach")
+    st.subheader("🧮 Lernen mit Lenny")
     # Chat-Container auf exakt 600px Höhe
     chat_container = st.container(height=600)
     
@@ -161,7 +162,7 @@ with chat_col:
 
 # Rechter Bereich: Notizzettel & parallele Überschrift
 with note_col:
-    st.subheader("📄 Dein Notizzettel")
+    st.subheader("📄 Notizen")
     box_start = "<" + "div class='notizzettel-box'" + ">"
     box_end = "<" + "/div" + ">"
     st.markdown(box_start + st.session_state.notizzettel + box_end, unsafe_allow_html=True)
