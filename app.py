@@ -5,7 +5,6 @@ from openai import OpenAI
 st.set_page_config(page_title="Mathe-Coach", page_icon="🧮", layout="wide")
 
 # 2. Visuelles Design für den Notizzettel (Kariertes Papier & Handschrift)
-# Wir stückeln die HTML-Tags, damit Chat-Schnittstellen nicht abbrechen
 css_start = "<" + "style" + ">"
 css_end = "<" + "/style" + ">"
 custom_css = css_start + """
@@ -31,7 +30,7 @@ custom_css = css_start + """
 """ + css_end
 st.markdown(custom_css, unsafe_allow_html=True)
 
-# 3. ÜBERSICHT IN DER LINKEN SEITENLEISTE (Nur die Aufgaben)
+# 3. ÜBERSICHT IN DER LINKEN SEITENLEISTE
 with st.sidebar:
     st.title("📝 Deine Aufgaben")
     st.markdown("""
@@ -61,7 +60,7 @@ else:
     st.error("Bitte hinterlege den API-Key (GROQ_API_KEY) in den Streamlit Secrets.")
     st.stop()
 
-# 5. Der System-Prompt (mit Fokus auf Passivität und Freiraum)
+# 5. Der System-Prompt
 system_prompt = """
 Du bist ein authentischer, sehr zurückhaltender Mathe-Tutor (8. Klasse). Du begleitest den Schüler, aber du drängst ihn nicht und überlässt ihm die Führung.
 
@@ -92,26 +91,25 @@ if "messages" not in st.session_state:
 if "notizzettel" not in st.session_state:
     st.session_state.notizzettel = "Noch leer. Wir fangen gerade erst an!"
 
-# 7. Layout in Spalten aufteilen: Links (Chat) 2/3 Platz, Rechts (Notizzettel) 1/3 Platz
+# 7. Layout in Spalten aufteilen
 chat_col, note_col = st.columns([2, 1])
 
-# Rechter Bereich: Notizzettel im Expander (standardmäßig ausgeklappt)
+# Rechter Bereich: Notizzettel
 with note_col:
     with st.expander("📄 Dein Notizzettel", expanded=True):
-        # Zusammenbauen des HTML-Tags ohne direkte "
-        div_end = "<" + "/div" + ">"
-        st.markdown(div_start + st.session_state.notizzettel + div_end, unsafe_allow_html=True)
+        html_start = "<" + "div class='notizzettel-box'" + ">"
+        html_end = "<" + "/div" + ">"
+        st.markdown(html_start + st.session_state.notizzettel + html_end, unsafe_allow_html=True)
 
 # Linker Bereich: Chat
 with chat_col:
     for msg in st.session_state.messages:
         if msg["role"] != "system":
-            # Wir blenden den Notizzettel-Code im sichtbaren Chat aus
             display_text = msg["content"].split("NOTIZZETTEL:")[0].strip()
             with st.chat_message(msg["role"]):
                 st.markdown(display_text)
 
-# 8. Chat-Eingabe (Fixiert am unteren Bildschirmrand)
+# 8. Chat-Eingabe
 user_input = st.chat_input("Schreibe hier...")
 
 if user_input:
@@ -130,7 +128,6 @@ if user_input:
                 )
                 full_response = stream.choices[0].message.content
                 
-                # Notizzettel extrahieren
                 if "NOTIZZETTEL:" in full_response:
                     chat_text, notizzettel_text = full_response.split("NOTIZZETTEL:")
                     st.session_state.notizzettel = notizzettel_text.strip()
@@ -140,7 +137,6 @@ if user_input:
                 st.markdown(chat_text.strip())
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 
-                # Rerun erzwingt die Aktualisierung des Notizzettels auf der rechten Seite
                 st.rerun()
                 
             except Exception as e:
