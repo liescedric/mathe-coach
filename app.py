@@ -1,24 +1,34 @@
 import streamlit as st
 from openai import OpenAI
+import re
 
 # 1. Seiten-Design
 st.set_page_config(page_title="Mathe-Coach", page_icon="🧮", layout="wide")
 
-# 2. Visuelles Design (Perfekt ausgerichtetes Karopapier & Sticky Wrapper)
+# 2. Visuelles Design (Echte "Rechte Sidebar" & Karopapier)
 css_start = "<" + "style" + ">"
 css_end = "<" + "/style" + ">"
 custom_css = css_start + """
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap');
 
-/* Der Wrapper, der den Zettel beim Scrollen festhält */
-.sticky-wrapper {
+/* HACK: Wir machen die gesamte zweite Spalte zu einer Art rechten Seitenleiste */
+[data-testid="column"]:nth-of-type(2) {
     position: -webkit-sticky;
     position: sticky;
-    top: 2rem;
+    top: 4rem; /* Abstand nach oben */
+    height: calc(100vh - 6rem); /* Nimmt die restliche Bildschirmhöhe ein */
+    overflow-y: auto; /* Bekommt eine eigene Scrollbar, falls der Zettel wächst */
+    padding-bottom: 2rem;
     z-index: 100;
 }
 
-/* Der Notizzettel mit exakt synchronisierten Linien */
+/* Verstecke die hässliche Standard-Scrollbar in der rechten Spalte für eine saubere Optik */
+[data-testid="column"]:nth-of-type(2)::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+/* Das Design des Notizzettels */
 .notizzettel-box {
     background-color: #ffffff;
     background-image: 
@@ -32,8 +42,8 @@ custom_css = css_start + """
     font-family: 'Caveat', cursive;
     font-size: 24px;
     color: #000080;
-    min-height: 500px;
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    min-height: 600px; /* Schön lang, wie ein echtes Blatt Papier */
+    box-shadow: 2px 2px 12px rgba(0,0,0,0.15);
     white-space: pre-wrap;
     line-height: 30px; 
 }
@@ -56,7 +66,7 @@ with st.sidebar:
     Für ein Schulkonzert wurden 150 Karten verkauft. Erwachsene kosten 8 Euro, Schüler 5 Euro. Einnahmen 990 Euro.
     *Frage: Wie viele Erwachsene und wie viele Schüler waren auf dem Konzert?*
     """)
-    st.success("Tipp: Der Notizzettel rechts scrollt immer mit und bleibt im Blick!")
+    st.success("Tipp: Der Notizzettel füllt sich strukturiert mit euren Erkenntnissen!")
 
 st.title("🧮 Dein interaktiver Mathe-Coach")
 
@@ -70,58 +80,78 @@ else:
     st.error("Bitte hinterlege den API-Key (GROQ_API_KEY) in den Streamlit Secrets.")
     st.stop()
 
-# 5. Der extrem verschärfte System-Prompt
+# 5. Der System-Prompt (Mit Leistungsdiagnose & Notizzettel-Struktur)
 system_prompt = """
-Du bist ein Mathe-Coach (8. Klasse). DEIN ZIEL IST ES, DASS DER SCHÜLER SELBST RECHNET. DU LÖST NIEMALS AUFGABEN!
+Du bist ein exzellenter, adaptiver Mathe-Coach (8. Klasse). DEIN ZIEL: Der Schüler modelliert und rechnet selbstständig. Du löst NIEMALS Aufgaben für ihn.
 
-DEIN GEHEIMWISSEN (Niemals verraten, bevor der Schüler es nicht selbst gesagt hat!):
-- Aufgabe 1: x+y=20, 2x+4y=54
-- Aufgabe 2: Brezeln (b) und Muffins (m). 3b+2m=6,80; 2b+4m=8,80
-- Aufgabe 3: Erwachsene (e) und Schüler (s). e+s=150, 8e+5s=990
+GEHEIMWISSEN FÜR DICH:
+- Aufgabe 1 (Hühner/Schweine): x+y=20, 2x+4y=54
+- Aufgabe 2 (Cafeteria): 3b+2m=6,80; 2b+4m=8,80
+- Aufgabe 3 (Konzert): e+s=150, 8e+5s=990
 
-STRIKTE VERHALTENSREGELN (Zwingend einhalten!):
-1. RECHENVERBOT: Wenn der Schüler "lösen bitte", "rechne das" oder ähnliches fordert, WEIGERE DICH FREUNDLICH. Sage: "Ich bin dein Coach, ich rechne nicht für dich. Was wäre dein erster eigener Schritt?"
-2. KEINE HALLUZINATIONEN: Bleibe exakt bei den Aufgaben (b ist Brezel, niemals Banane! e sind Erwachsene, keine eiskalten Tickets!).
-3. EINE FRAGE: Stelle in deiner Antwort immer nur EINE einzige Gegenfrage.
-4. PASSIVITÄT: Wenn der Schüler richtig rechnet, sage nur "Stimmt!" und warte auf seinen nächsten Schritt.
+ADAPTIVE DIAGNOSE (WICHTIG!):
+Mache dir vor jeder Antwort ein Bild vom Leistungsstand des Schülers. Beginne deine Antwort IMMER mit einem -Block, den der Schüler nicht sieht. 
+Beispiel:
 
-FORMATIERUNG:
-1. Nutze im Chat für Mathematik IMMER ein Dollar-Zeichen (z.B. \(x+y=20\)).
-2. VERBOTEN: Eckige Klammern [...] oder Konstrukte wie \\qquad sind absolut verboten!
+Der Schüler hat die Unbekannten richtig benannt, aber Schwierigkeiten beim Aufstellen der ersten Gleichung. Er braucht kleinschrittige Hilfe beim Übersetzen des Textes in Mathematik. Leistungsstand: Anfänger bei Modellierung.
+
+Passe deine danach folgende Antwort im Chat exakt an diese Diagnose an (kleinere Schritte für Unsichere, größere Sprünge für Starke).
+
+REGELN FÜR DEN CHAT:
+1. Reagiert der Schüler mit "Löse das" oder "Rechne das", weigere dich freundlich.
+2. Stelle immer nur EINE kurze Gegenfrage. 
+3. Nutze für Mathematik im Chat IMMER das Format \(x+y=20\). Keine Klammern wie \(x+y=20\)!
 
 REGELN FÜR DEN NOTIZZETTEL:
-1. Schreibe am Ende JEDER deiner Antworten: "NOTIZZETTEL:" gefolgt vom aktuellen Wissen.
-2. Der Notizzettel ist zu Beginn komplett LEER. Schreibe dein Geheimwissen NICHT dorthin!
-3. Füge Variablen und Gleichungen ERST DANN in den Notizzettel ein, WENN der Schüler sie im Chat richtig aufgestellt hat.
+1. Am Ende JEDER deiner Antworten schreibst du zwingend das Wort "NOTIZZETTEL:" gefolgt von der Aktualisierung.
+2. Nutze im Notizzettel KEINE LATEX-ZEICHEN (\(,\), \(,\)$). Schreibe reinen Text!
+3. Der Notizzettel MUSS zwingend dieser Struktur folgen. Fülle nur die Teile aus, die der Schüler schon selbst erarbeitet hat. Was noch nicht erarbeitet wurde, bleibt leer oder bekommt Platzhalter.
+
+STRUKTUR DES NOTIZZETTELS (Exakt so übernehmen!):
+Aufgabe [Nummer]
+
+Gesucht: 
+[Hier die Unbekannten in Worten und Variablen, z.B. x = Anzahl Hühner]
+
+Gegeben: 
+[Hier die Textinformationen in Mathe übersetzt, z.B. 20 Tiere insgesamt]
+
+Rechnung:
+[Hier die reinen mathematischen Gleichungen und Rechenschritte]
+
+Lösungssatz: 
+[Hier das Ergebnis zurück in die reale Welt übersetzt]
 """
 
 # 6. Chat-Verlauf und Notizzettel initialisieren
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": system_prompt}]
-    start_msg = "Hallo! Ich bin dein Mathe-Coach. Welche der drei Aufgaben wollen wir uns zuerst ansehen?"
+    start_msg = "\nInitialisierung. Schüler soll Aufgabe wählen.\n\nHallo! Ich bin dein Mathe-Coach. Welche der drei Aufgaben wollen wir uns zuerst ansehen?\n\nNOTIZZETTEL:\nNoch leer. Wähle eine Aufgabe, um zu starten!"
     st.session_state.messages.append({"role": "assistant", "content": start_msg})
 
 if "notizzettel" not in st.session_state:
-    st.session_state.notizzettel = "Noch leer. Wir fangen gerade erst an!"
+    st.session_state.notizzettel = "Noch leer. Wähle eine Aufgabe, um zu starten!"
 
 # 7. Layout in Spalten aufteilen
 chat_col, note_col = st.columns([2, 1])
 
-# Rechter Bereich: Notizzettel
+# Rechter Bereich: Notizzettel (Jetzt wird die ganze Spalte per CSS fixiert)
 with note_col:
-    wrap_start = "<" + "div class='sticky-wrapper'" + ">"
     box_start = "<" + "div class='notizzettel-box'" + ">"
     box_end = "<" + "/div" + ">"
-    wrap_end = "<" + "/div" + ">"
     
     st.markdown("### 📄 Dein Notizzettel")
-    st.markdown(wrap_start + box_start + st.session_state.notizzettel + box_end + wrap_end, unsafe_allow_html=True)
+    st.markdown(box_start + st.session_state.notizzettel + box_end, unsafe_allow_html=True)
 
 # Linker Bereich: Chat
 with chat_col:
     for msg in st.session_state.messages:
         if msg["role"] != "system":
-            display_text = msg["content"].split("NOTIZZETTEL:")[0].strip()
+            # 1. Notizzettel abtrennen
+            content = msg["content"].split("NOTIZZETTEL:")[0].strip()
+            # 2. Die versteckte  für die Anzeige im Chatfenster herausfiltern
+            display_text = re.sub(r".*?", "", content, flags=re.DOTALL).strip()
+            
             with st.chat_message(msg["role"]):
                 st.markdown(display_text)
 
@@ -144,13 +174,19 @@ if user_input:
                 )
                 full_response = stream.choices[0].message.content
                 
+                # Extrahieren des Notizzettels
                 if "NOTIZZETTEL:" in full_response:
-                    chat_text, notizzettel_text = full_response.split("NOTIZZETTEL:")
+                    chat_text, notizzettel_text = full_response.split("NOTIZZETTEL:", 1)
                     st.session_state.notizzettel = notizzettel_text.strip()
                 else:
                     chat_text = full_response
                 
-                st.markdown(chat_text.strip())
+                # Extrahieren der Chat-Nachricht (ohne Diagnose-Block) für die UI
+                display_text = re.sub(r".*?", "", chat_text, flags=re.DOTALL).strip()
+                
+                st.markdown(display_text)
+                
+                # Wir speichern die VOLLSTÄNDIGE Antwort (inklusive Diagnose) im Verlauf
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 
                 st.rerun()
