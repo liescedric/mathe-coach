@@ -5,11 +5,17 @@ import re
 # 1. Seiten-Design
 st.set_page_config(page_title="Mathe-Coach", page_icon="🧮", layout="wide")
 
-# 2. Visuelles Design (Notizzettel als echtes Arbeitsblatt)
+# 2. Visuelles Design (Notizzettel und Chat synchronisiert)
 css_start = "<" + "style" + ">"
 css_end = "<" + "/style" + ">"
 custom_css = css_start + """
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap');
+
+/* Verstecke die Scrollbar im Notizzettel für eine saubere Optik */
+.notizzettel-box::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
 
 .notizzettel-box {
     background-color: #ffffff;
@@ -24,7 +30,11 @@ custom_css = css_start + """
     font-family: 'Caveat', cursive;
     font-size: 24px;
     color: #000080;
-    min-height: 600px;
+    
+    /* Exakte Höhe, passend zum Chat-Container */
+    height: 600px;
+    overflow-y: auto;
+    
     box-shadow: 2px 2px 12px rgba(0,0,0,0.15);
     white-space: pre-wrap;
     line-height: 30px; 
@@ -38,13 +48,18 @@ with st.sidebar:
     st.markdown("""
     **Aufgabe 1: Hühner & Schweine**
     Auf einem Bauernhof gibt es Hühner und Schweine. Insgesamt sind es 20 Tiere. Zusammen haben sie 54 Beine. 
+    *Frage: Wie viele Hühner und wie viele Schweine sind es?*
     
     **Aufgabe 2: Cafeteria**
     Anna kauft 3 Brezeln und 2 Muffins für 6,80 Euro. Ben kauft 2 Brezeln und 4 Muffins für 8,80 Euro. 
+    *Frage: Wie viel kostet eine Brezel und wie viel ein Muffin?*
     
     **Aufgabe 3: Konzertkarten**
     Für ein Schulkonzert wurden 150 Karten verkauft. Erwachsene kosten 8 Euro, Schüler 5 Euro. Einnahmen 990 Euro.
+    *Frage: Wie viele Erwachsene und wie viele Schüler waren auf dem Konzert?*
     """)
+    
+    st.info("💡 **Tipp:** Lege dir am besten ein echtes Blatt Papier und einen Stift bereit, um nebenbei mitzuschreiben und zu rechnen!")
 
 st.title("🧮 Dein interaktiver Mathe-Coach")
 
@@ -58,7 +73,7 @@ else:
     st.error("Bitte hinterlege den API-Key (GROQ_API_KEY) in den Streamlit Secrets.")
     st.stop()
 
-# 5. Der System-Prompt (Fokus auf non-lineares Lernen & bedarfsgerechte Hilfe)
+# 5. Der System-Prompt
 system_prompt = """
 Du bist ein professioneller, extrem anpassungsfähiger Mathe-Coach (8. Klasse). 
 DEIN ZIEL: Der Schüler erarbeitet den Lösungsweg selbst. Du löst NIEMALS Aufgaben für ihn.
@@ -109,8 +124,8 @@ Noch leer. Wähle eine Aufgabe, um zu starten!"""
 if "notizzettel" not in st.session_state:
     st.session_state.notizzettel = "Noch leer. Wähle eine Aufgabe, um zu starten!"
 
-# 7. Layout in Spalten aufteilen
-chat_col, note_col = st.columns([2, 1])
+# 7. Layout in Spalten aufteilen (angepasst für zentrierteres Design: 1.5 zu 1)
+chat_col, note_col = st.columns([1.5, 1])
 
 # Rechter Bereich: Notizzettel
 with note_col:
@@ -121,6 +136,7 @@ with note_col:
 
 # Linker Bereich: Chat
 with chat_col:
+    # Chat-Container auf exakt 600px Höhe, passend zum Notizzettel
     chat_container = st.container(height=600)
     
     with chat_container:
@@ -128,17 +144,15 @@ with chat_col:
             if msg["role"] != "system":
                 content = msg["content"]
                 
-                # Wenn es der Assistent ist, extrahieren wir nur den CHAT: Bereich für die Anzeige
                 if msg["role"] == "assistant":
                     chat_match = re.search(r'CHAT:(.*?)(?=NOTIZZETTEL:|$)', content, re.DOTALL)
                     if chat_match:
                         display_text = chat_match.group(1).strip()
                     else:
-                        display_text = content # Fallback
+                        display_text = content
                 else:
                     display_text = content
                 
-                # Setze den Notizzettel-Zustand für den Render-Durchlauf
                 if msg["role"] == "assistant" and "NOTIZZETTEL:" in content:
                     note_match = re.search(r'NOTIZZETTEL:(.*)', content, re.DOTALL)
                     if note_match:
@@ -159,6 +173,7 @@ if user_input:
         
         with st.chat_message("assistant"):
             try:
+                # 120B Modell
                 stream = client.chat.completions.create(
                     model="openai/gpt-oss-120b", 
                     messages=st.session_state.messages,
@@ -166,21 +181,18 @@ if user_input:
                 )
                 full_response = stream.choices[0].message.content
                 
-                # Chat-Teil extrahieren
                 chat_match = re.search(r'CHAT:(.*?)(?=NOTIZZETTEL:|$)', full_response, re.DOTALL)
                 if chat_match:
                     display_text = chat_match.group(1).strip()
                 else:
                     display_text = full_response
                 
-                # Notizzettel-Teil extrahieren und in Session speichern
                 note_match = re.search(r'NOTIZZETTEL:(.*)', full_response, re.DOTALL)
                 if note_match:
                     st.session_state.notizzettel = note_match.group(1).strip()
                 
                 st.markdown(display_text)
                 
-                # Gesamte Antwort im Hintergrund speichern (inkl. DIAGNOSE)
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 
                 st.rerun()
