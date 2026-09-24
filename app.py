@@ -4,11 +4,20 @@ from openai import OpenAI
 # 1. Seiten-Design
 st.set_page_config(page_title="Mathe-Coach", page_icon="🧮", layout="wide")
 
-# 2. Visuelles Design für den Notizzettel (Kariertes Papier & Handschrift)
+# 2. Visuelles Design (Kariertes Papier, Handschrift & Sticky Notizzettel)
 css_start = "<" + "style" + ">"
 css_end = "<" + "/style" + ">"
 custom_css = css_start + """
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap');
+
+/* Mache die rechte Spalte (Notizzettel) klebrig beim Scrollen */
+[data-testid="column"]:nth-of-type(2) {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 4rem;
+    align-self: flex-start;
+    z-index: 10;
+}
 
 .notizzettel-box {
     background-color: #ffffff;
@@ -46,7 +55,7 @@ with st.sidebar:
     Für ein Schulkonzert wurden 150 Karten verkauft. Erwachsene 8 Euro, Schüler 5 Euro. Einnahmen 990 Euro.
     *Frage: Wie viele Erwachsene und wie viele Schüler waren auf dem Konzert?*
     """)
-    st.success("Tipp: Der Chat ist links, dein Notizzettel rechts!")
+    st.success("Tipp: Der Chat ist links. Dein Notizzettel rechts scrollt jetzt immer mit!")
 
 st.title("🧮 Dein interaktiver Mathe-Coach")
 
@@ -60,32 +69,37 @@ else:
     st.error("Bitte hinterlege den API-Key (GROQ_API_KEY) in den Streamlit Secrets.")
     st.stop()
 
-# 5. Der System-Prompt
+# 5. Der System-Prompt (Fokus: Sokratischer Dialog & Empathie)
 system_prompt = """
-Du bist ein authentischer, sehr zurückhaltender Mathe-Tutor (8. Klasse). Du begleitest den Schüler, aber du drängst ihn nicht und überlässt ihm die Führung.
+Du bist ein empathischer, sokratischer Mathe-Tutor (8. Klasse). Du löst keine Aufgaben, sondern befähigst den Schüler, selbst zu denken.
 
-Geheimwissen für dich (Kontext):
+Geheimwissen für dich:
 1. Hühner & Schweine: Hühner = 2 Beine, Schweine = 4 Beine. (x+y=20, 2x+4y=54)
 2. Cafeteria: 3 Brezeln + 2 Muffins = 6,80 Euro; 2 Brezeln + 4 Muffins = 8,80 Euro
 3. Konzertkarten: e+s=150, 8e+5s=990
 
 STRIKTE DIDAKTIK-REGELN (WICHTIG!):
-1. ABSOLUTE ZURÜCKHALTUNG: Sei passiv! Wenn der Schüler eine richtige Gleichung, Variable oder Rechnung nennt, lobe ihn kurz (z.B. "Stimmt genau!" oder "Richtig."). WARTE DANN EINFACH AB. Frage NICHT: "Was möchtest du als nächstes tun?" oder "Sollen wir jetzt x auflösen?". Lass den Schüler selbst überlegen, was der nächste Schritt ist.
-2. HILFE NUR BEI BEDARF: Greife nur helfend ein, wenn der Schüler einen Fehler macht, eine falsche Fährte verfolgt oder explizit "Ich weiß nicht" sagt. Gib dann nur einen winzigen Denkanstoß.
-3. FLEXIBLE VARIABLEN: Akzeptiere JEDE Variablen-Zuweisung des Schülers (z.B. m=Brezel).
-4. FREIE WAHL: Lass den Schüler entscheiden, welche Aufgabe er bearbeiten will.
+1. EMPATHIE & GRUNDLAGEN ZUERST: Wenn der Schüler Verständnisfragen stellt (z.B. "Was ist ein x?", "Was ist eine Gleichung?", "Ich verstehe das nicht"), STOPPE das Rechnen sofort. Erkläre das Konzept sehr einfach und alltagsnah, bevor ihr mit der Aufgabe weitermacht.
+2. SOKRATISCHER DIALOG: Zwinge dem Schüler niemals deinen Lösungsweg auf. Wenn die Gleichungen stehen, frage: "Kennst du ein Verfahren, um solche Gleichungen zu lösen?". Lass ihn wählen (Einsetzungs-, Gleichsetzungs- oder Additionsverfahren). 
+3. STRUKTURIERTE PHASEN: Behandle jede Aufgabe in dieser Reihenfolge:
+   - Phase 1: Unbekannte definieren (Was suchen wir?)
+   - Phase 2: Gleichungen aufstellen (Modellieren)
+   - Phase 3: Lösungsverfahren wählen
+   - Phase 4: Schrittweise rechnen
+   Springe niemals direkt zu Phase 3, wenn Phase 2 nicht abgeschlossen ist.
+4. ZURÜCKHALTUNG: Wenn der Schüler einen richtigen Schritt macht, bestätige es kurz ("Stimmt!") und WARTE. Frag nicht ständig "Was machen wir jetzt?", lass ihm Zeit nachzudenken. Gib nur Hilfestellung, wenn er stecken bleibt.
 
 STRIKTE FORMATIERUNGS-REGELN:
-1. Nutze im Chat für Formeln IMMER das korrekte Markdown-Math-Format (mit Dollar-Zeichen).
-2. VERBOTEN: Nutze NIEMALS normale Klammern um mathematische Ausdrücke.
-3. Am Ende JEDER deiner Antworten schreibst du zwingend das Wort "NOTIZZETTEL:" gefolgt von den aktuell gültigen Gleichungen oder Variablen, die ihr bisher gemeinsam erarbeitet habt.
-4. WICHTIG FÜR DEN NOTIZZETTEL: Nutze nach dem Wort NOTIZZETTEL KEINE Markdown-Formatierungen, keine Dollar-Zeichen und kein LaTeX. Schreibe die Gleichungen dort als reinen Text (z.B. 3m + 2b = 6,80), damit die Handschrift-Schriftart sie gut darstellen kann.
+1. Nutze im Chat für Mathematik AUSNAHMSLOS das Dollar-Zeichen-Format. Schreibe IMMER \(x+y=20\). 
+2. VERBOTEN: Normale Klammern als Mathe-Ersatz wie (x+y=20) oder \(((x))\) sind strengstens verboten!
+3. Am Ende JEDER deiner Antworten schreibst du zwingend das Wort "NOTIZZETTEL:" gefolgt von den aktuell gültigen Gleichungen oder Variablen. Schreibe hier NUR Dinge auf, die ihr bereits klar vereinbart habt.
+4. Für den Notizzettel nutze reinen Text (ohne Markdown/Dollarzeichen), z.B. 2x + 4y = 54.
 """
 
 # 6. Chat-Verlauf und Notizzettel initialisieren
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": system_prompt}]
-    start_msg = "Hallo! Ich bin dein Mathe-Coach. Mit welcher Aufgabe möchtest du beginnen?"
+    start_msg = "Hallo! Ich bin dein Mathe-Coach. Welche der drei Aufgaben wollen wir uns zuerst ansehen?"
     st.session_state.messages.append({"role": "assistant", "content": start_msg})
 
 if "notizzettel" not in st.session_state:
@@ -96,10 +110,11 @@ chat_col, note_col = st.columns([2, 1])
 
 # Rechter Bereich: Notizzettel
 with note_col:
-    with st.expander("📄 Dein Notizzettel", expanded=True):
-        html_start = "<" + "div class='notizzettel-box'" + ">"
-        html_end = "<" + "/div" + ">"
-        st.markdown(html_start + st.session_state.notizzettel + html_end, unsafe_allow_html=True)
+    # Den Expander weglassen, damit das Sticky-Verhalten besser funktioniert
+    html_start = "<" + "div class='notizzettel-box'" + ">"
+    html_end = "<" + "/div" + ">"
+    st.markdown("### 📄 Dein Notizzettel")
+    st.markdown(html_start + st.session_state.notizzettel + html_end, unsafe_allow_html=True)
 
 # Linker Bereich: Chat
 with chat_col:
