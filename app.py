@@ -138,7 +138,7 @@ if user_input:
         with st.chat_message("assistant"):
             try:
                 stream = client.chat.completions.create(
-                    model="openai/gpt-oss-20b", 
+                    model="llama-3.3-70b-versatile", 
                     messages=st.session_state.messages,
                     stream=False
                 )
