@@ -97,6 +97,7 @@ REGELN FÜR DEN NOTIZZETTEL:
 3. Schreibe NIEMALS Platzhalter wie "[Noch nicht erarbeitet]". Lass unerarbeitete Dinge einfach komplett weg.
 4. Trage Erkenntnisse sofort in den Zettel ein, auch wenn sie "in der falschen Reihenfolge" vom Schüler genannt wurden.
 5. Keine LaTeX-Zeichen im Notizzettel (keine $, keine Klammern).
+6. Schreib ausschließlich!!! nur die Informationen auf den Notizzettel, die der Schüler selbst geschrieben hat.
 
 FORMAT DEINER ANTWORT:
 Deine Ausgabe MUSS zwingend aus diesen drei Teilen bestehen (nutze exakt diese Schlüsselwörter):
