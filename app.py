@@ -98,25 +98,12 @@ REGELN FÜR DEN NOTIZZETTEL:
 4. Trage Erkenntnisse sofort in den Zettel ein, auch wenn sie "in der falschen Reihenfolge" vom Schüler genannt wurden.
 5. Keine LaTeX-Zeichen im Notizzettel (keine $, keine Klammern).
 6. Schreib ausschließlich!!! nur die Informationen auf den Notizzettel, die der Schüler selbst geschrieben hat.
-7. STRUKTUR DES NOTIZZETTELS (STRIKTES TEMPLATE):
-Der Notizzettel muss für jede Aufgabe immer in genau drei Abschnitte unterteilt sein. Trenne die Abschnitte mit einer leeren Zeile. Halte den Text minimal. Schreibe die Abschnitte nicht als Platzhalter, die Struktur gilt nur intern für dich.
-Nutze exakt dieses Format:
-
-- Sammle hier nur stichpunktartig die definierten Variablen und Gleichungen (z.B. x = Hühner).
-
-- Schreibe hier die Rechnung auf.
-- PRO ZEILE genau eine Gleichung.
-- Schreibe die Rechenoperation rechts daneben, getrennt durch einen senkrechten Strich (z.B. 2x + 4y = 54   | -2x).
-- Unterstreiche Zwischen- und Endergebnisse zwingend mit HTML-Tags (z.B. y = 7).
-
-- Schreibe exakt das Wort "Antwortsatz: " gefolgt von dem Lösungssatz, welche der Schüler gibt.
-
-8. AUFGABEN-BLÖCKE & ZWINGENDE SORTIERUNG (MULTITASKING):
-- Sobald der Schüler eine Aufgabe wählt, generierst du als erstes die Überschrift "Aufgabe [1/2/3]" auf dem Notizzettel.
-- Alles, was zu dieser Aufgabe gehört, wird streng unter dieser Überschrift strukturiert (nach Regel 7).
-- WICHTIG BEIM WECHSELN: Wenn der Schüler eine Aufgabe pausiert und eine andere beginnt, LÖSCHE NICHTS! Behalte alle bisherigen Blöcke.
-- FESTE REIHENFOLGE: Die Blöcke auf dem Notizzettel MÜSSEN immer strikt nach Aufgabennummer sortiert sein (von oben nach unten: Aufgabe 1, dann Aufgabe 2, dann Aufgabe 3). 
-- BEISPIEL: Auch wenn der Schüler zuerst Aufgabe 3 und danach Aufgabe 1 bearbeitet, muss der neue Block "Aufgabe 1" zwingend GANZ OBEN über "Aufgabe 3" eingefügt werden. Es darf maximal diese 3 Blöcke geben.
+7. STRUKTUR-BEDINGUNGEN (STRIKTES WENN-DANN-PRINZIP):
+Baue den Notizzettel streng nach den folgenden Regeln auf. Wenn eine Bedingung nicht erfüllt ist, lass den Teil KOMPLETT weg!
+- WENN der Schüler eine Aufgabe wählt -> Schreibe NUR "### Aufgabe X". Sonst nichts! (Erzeuge hier noch keinen "Antwortsatz:" oder leere Zeilen).
+- WENN der Schüler Variablen/Informationen liefert -> Trage sie als simplen Text unter der Aufgabe ein (z.B. x = Hühner).
+- WENN der Schüler rechnet -> Schreibe PRO ZEILE genau eine Gleichung. Notiere die Rechenoperation rechts daneben, getrennt durch einen senkrechten Strich (z.B. 2x + 4y = 54   | -2x). Unterstreiche Zwischen-/Endergebnisse zwingend mit HTML-Tags (z.B. y = 7).
+- WENN der Schüler den finalen Lösungssatz nennt -> Schreibe als allerletzte Zeile "Antwortsatz: [Satz des Schülers]". Generiere das Wort "Antwortsatz:" KEINE SEKUNDE FRÜHER!
 
 FORMAT DEINER ANTWORT:
 Deine Ausgabe MUSS zwingend aus diesen drei Teilen bestehen (nutze exakt diese Schlüsselwörter):
