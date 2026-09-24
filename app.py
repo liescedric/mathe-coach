@@ -5,7 +5,7 @@ import re
 # 1. Seiten-Design
 st.set_page_config(page_title="Mathe-Coach", page_icon="🧮", layout="wide")
 
-# 2. Visuelles Design (Notizzettel und Chat synchronisiert)
+# 2. Visuelles Design (Schatten entfernt, Rahmen an Streamlit angepasst)
 css_start = "<" + "style" + ">"
 css_end = "<" + "/style" + ">"
 custom_css = css_start + """
@@ -25,8 +25,11 @@ custom_css = css_start + """
     background-size: 30px 30px; 
     background-position: 0 0;
     padding: 30px 20px 30px 20px; 
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    
+    /* Streamlit-ähnlicher flacher Rand ohne Schatten */
+    border: 1px solid rgba(49, 51, 63, 0.2);
+    border-radius: 8px; 
+    
     font-family: 'Caveat', cursive;
     font-size: 24px;
     color: #000080;
@@ -35,7 +38,6 @@ custom_css = css_start + """
     height: 600px;
     overflow-y: auto;
     
-    box-shadow: 2px 2px 12px rgba(0,0,0,0.15);
     white-space: pre-wrap;
     line-height: 30px; 
 }
@@ -60,8 +62,6 @@ with st.sidebar:
     """)
     
     st.info("💡 **Tipp:** Lege dir am besten ein echtes Blatt Papier und einen Stift bereit, um nebenbei mitzuschreiben und zu rechnen!")
-
-st.title("🧮 Dein interaktiver Mathe-Coach")
 
 # 4. API-Key laden
 if "GROQ_API_KEY" in st.secrets:
@@ -127,16 +127,10 @@ if "notizzettel" not in st.session_state:
 # 7. Layout in Spalten aufteilen (angepasst für zentrierteres Design: 1.5 zu 1)
 chat_col, note_col = st.columns([1.5, 1])
 
-# Rechter Bereich: Notizzettel
-with note_col:
-    box_start = "<" + "div class='notizzettel-box'" + ">"
-    box_end = "<" + "/div" + ">"
-    st.markdown("### 📄 Dein Notizzettel")
-    st.markdown(box_start + st.session_state.notizzettel + box_end, unsafe_allow_html=True)
-
-# Linker Bereich: Chat
+# Linker Bereich: Chat & Überschrift
 with chat_col:
-    # Chat-Container auf exakt 600px Höhe, passend zum Notizzettel
+    st.subheader("🧮 Dein interaktiver Mathe-Coach")
+    # Chat-Container auf exakt 600px Höhe
     chat_container = st.container(height=600)
     
     with chat_container:
@@ -160,6 +154,14 @@ with chat_col:
                 
                 with st.chat_message(msg["role"]):
                     st.markdown(display_text)
+
+# Rechter Bereich: Notizzettel & parallele Überschrift
+with note_col:
+    st.subheader("📄 Dein Notizzettel")
+    box_start = "<" + "div class='notizzettel-box'" + ">"
+    box_end = "<" + "/div" + ">"
+    st.markdown(box_start + st.session_state.notizzettel + box_end, unsafe_allow_html=True)
+
 
 # 8. Chat-Eingabe
 user_input = st.chat_input("Schreibe hier...")
