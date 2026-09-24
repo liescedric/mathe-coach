@@ -48,18 +48,18 @@ st.markdown(custom_css, unsafe_allow_html=True)
 with st.sidebar:
     st.title("📝 Deine Aufgaben")
     st.markdown("""
-    **Aufgabe 1: Hühner & Schweine
-    **
+    **Aufgabe 1: Hühner & Schweine**
+    
     Auf einem Bauernhof gibt es Hühner und Schweine. Insgesamt sind es 20 Tiere. Zusammen haben sie 54 Beine. 
     *Frage: Wie viele Hühner und wie viele Schweine sind es?*
     
-    **Aufgabe 2: Cafeteria
-    **
+    **Aufgabe 2: Cafeteria**
+    
     Anna kauft 3 Brezeln und 2 Muffins für 6,80 Euro. Ben kauft 2 Brezeln und 4 Muffins für 8,80 Euro. 
     *Frage: Wie viel kostet eine Brezel und wie viel ein Muffin?*
     
-    **Aufgabe 3: Konzertkarten
-    **
+    **Aufgabe 3: Konzertkarten**
+    
     Für ein Schulkonzert wurden 150 Karten verkauft. Erwachsene kosten 8 Euro, Schüler 5 Euro. Einnahmen 990 Euro.
     *Frage: Wie viele Erwachsene und wie viele Schüler waren auf dem Konzert?*
     """)
