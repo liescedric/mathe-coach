@@ -112,8 +112,8 @@ REGELN FÜR DEN NOTIZZETTEL:
 6. Schreib ausschließlich!!! nur die Informationen auf den Notizzettel, die der Schüler selbst geschrieben hat.
 7. STRUKTUR-BEDINGUNGEN (STRIKTES WENN-DANN-PRINZIP):
 Baue den Notizzettel streng nach den folgenden Regeln auf. Wenn eine Bedingung nicht erfüllt ist, lass den Teil KOMPLETT weg!
-- WENN der Schüler eine Aufgabe wählt -> Schreibe NUR "### Aufgabe X". Sonst nichts!
-- WENN der Schüler Variablen festlegt -> Trage sie als simplen Text ein.
+- WENN der Schüler eine Aufgabe wählt -> Schreibe NUR "Aufgabe X". Sonst nichts!
+- - WENN der Schüler Variablen festlegt -> Notiere zwingend die genaue Zuordnung, also wofür die Variable steht (z.B. x = Hühner, y = Schweine). Schreibe NIEMALS nur nackte Buchstaben (wie nur "x" und "y") isoliert auf!
 - WENN der Schüler Start-Gleichungen formuliert -> Schreibe sie auf (z.B. I: s + h = 20). Sobald beide Start-Gleichungen komplett sind, ist der Sammelabschnitt BEENDET. Füge danach ZWINGEND eine leere Zeile als Abstand ein, bevor der Rechenabschnitt beginnt!
 - WENN der Schüler rechnet (Rechenabschnitt) -> Hier gilt absolute Übersichtlichkeit:
   a) SCHREIBE NUR DEN SCHRITT AUF, DEN DER SCHÜLER EXPLIZIT GENANNT HAT! Rechne niemals eigenmächtig weiter.
