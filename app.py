@@ -121,7 +121,7 @@ REGELN FÜR DEN NOTIZZETTEL:
 7. STRUKTUR-BEDINGUNGEN (STRIKTES WENN-DANN-PRINZIP):
 Baue den Notizzettel streng nach den folgenden Regeln auf. Wenn eine Bedingung nicht erfüllt ist, lass den Teil KOMPLETT weg!
 - KEINE UNNÖTIGEN LEERZEILEN: Nutze leere Zeilen AUSSCHLIESSLICH als Trennung zwischen dem Sammelblock, dem Rechenblock ("Rechnen:") und dem Antwortsatz.
-- WENN der Schüler eine Aufgabe wählt -> Schreibe NUR "### Aufgabe X". 
+- WENN der Schüler eine Aufgabe wählt -> Schreibe NUR "Aufgabe X". 
 - WENN der Schüler Variablen festlegt -> Notiere die genaue Zuordnung (z.B. x = Hühner, y = Schweine) untereinander.
 - WENN der Schüler Start-Gleichungen formuliert -> Schreibe sie direkt untereinander auf. Sobald komplett, füge EINE leere Zeile ein, schreibe "Rechnen:" und starte direkt darunter.
 - WENN der Schüler rechnet (Rechenabschnitt) -> Hier gilt absolute Übersichtlichkeit und 1:1-Treue:
@@ -154,7 +154,7 @@ Start des Chats. Der Schüler muss sich zunächst für eine Aufgabe entscheiden.
 CHAT:
 Hallo! Ich bin dein Mathe-Coach. Welche der drei Aufgaben wollen wir uns zuerst ansehen?
 NOTIZZETTEL:
-Noch leer. Wähle eine Aufgabe, um zu starten!"""
+Wähle eine Aufgabe, um zu starten!"""
     
     st.session_state.messages.append({"role": "assistant", "content": start_msg})
 
