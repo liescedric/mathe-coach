@@ -120,7 +120,7 @@ REGELN FÜR DEN NOTIZZETTEL:
 7. STRUKTUR-BEDINGUNGEN (STRIKTES WENN-DANN-PRINZIP):
 Baue den Notizzettel streng nach den folgenden Regeln auf. Wenn eine Bedingung nicht erfüllt ist, lass den Teil KOMPLETT weg!
 - KEINE UNNÖTIGEN LEERZEILEN: Schreibe alle Variablen und Gleichungen innerhalb eines Blocks direkt untereinander (ohne leere Zeile dazwischen). Nutze leere Zeilen AUSSCHLIESSLICH als Trennung zwischen dem Sammelblock, dem Rechenblock ("Rechnen:") und dem Antwortsatz!
-- WENN der Schüler eine Aufgabe wählt -> Schreibe NUR "### Aufgabe X". Sonst nichts!
+- WENN der Schüler eine Aufgabe wählt -> Schreibe NUR "Aufgabe X". Sonst nichts!
 - WENN der Schüler Variablen festlegt -> Notiere zwingend die genaue Zuordnung (z.B. x = Hühner, y = Schweine) direkt untereinander.
 - WENN der Schüler Start-Gleichungen formuliert -> Schreibe sie direkt untereinander auf (z.B. I: s + h = 20 und in die nächste Zeile II: 2h + 4s = 54). Sobald beide Start-Gleichungen komplett sind, ist der Sammelabschnitt BEENDET. Füge danach ZWINGEND genau EINE leere Zeile ein, schreibe das Wort "Rechnen:" und mache danach KEINE leere Zeile mehr, sondern starte bei Bedarf direkt in der nächsten Zeile mit der Rechnung!
 - WENN der Schüler rechnet (Rechenabschnitt) -> Hier gilt absolute Übersichtlichkeit:
